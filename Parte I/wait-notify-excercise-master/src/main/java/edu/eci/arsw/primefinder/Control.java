@@ -11,11 +11,11 @@ package edu.eci.arsw.primefinder;
 public class Control extends Thread {
     
     private final static int NTHREADS = 3;
-    private final static int MAXVALUE = 30000000;
+    private final static int MAXVALUE = 300;
     private final static int TMILISECONDS = 5000;
 
-    private final int NDATA = MAXVALUE / NTHREADS;
 
+    private final int NDATA = MAXVALUE / NTHREADS;
     private PrimeFinderThread pft[];
     
     private Control() {
@@ -36,9 +36,13 @@ public class Control extends Thread {
 
     @Override
     public void run() {
+
         for(int i = 0;i < NTHREADS;i++ ) {
+
             pft[i].start();
         }
     }
+
+
     
 }
