@@ -3,19 +3,24 @@ package edu.eci.arsw.primefinder;
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class PrimeFinderThread extends Thread{
 
 
 	int a,b;
     boolean booleano;
 	private List<Integer> primes;
-	
-	public PrimeFinderThread(int a, int b) {
+	private Object pivote;
+
+	public PrimeFinderThread(int a, int b, Object pivote) {
 		super();
 		this.primes = new LinkedList<>();
 		this.a = a;
 		this.b = b;
+		this.pivote = pivote;
+
 		this.booleano = false;
+
 
 
 
@@ -34,9 +39,23 @@ public class PrimeFinderThread extends Thread{
                 }
 				long comparador = System.currentTimeMillis();
                 long comparado = comparador - inicial;
-                if (comparado > 5000){
-                	/*CAso de salida con un objeto XD*/
-					/*Deberia reinicia el inicial*/
+                if (comparado > 1000){
+                	synchronized (pivote){
+                		try{
+
+							System.out.println(primes);
+							System.out.println("Ya pasaron 5 segundos.");
+
+							pivote.wait();
+
+
+
+						}
+                		catch(InterruptedException e){
+                			e.printStackTrace();
+						}
+					}
+
 				}
 
             }
