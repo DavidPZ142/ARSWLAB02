@@ -12,6 +12,7 @@ public class PrimeFinderThread extends Thread{
 	private List<Integer> primes;
 	private Object pivote;
 
+
 	public PrimeFinderThread(int a, int b, Object pivote) {
 		super();
 		this.primes = new LinkedList<>();
@@ -19,32 +20,33 @@ public class PrimeFinderThread extends Thread{
 		this.b = b;
 		this.pivote = pivote;
 
-		this.booleano = false;
-
-
-
 
 	}
 
         @Override
 	public void run(){
 			long inicial = System.currentTimeMillis();
-
             for (int i= a;i < b;i++){
 
 
                 if (isPrime(i)){
                     primes.add(i);
-                    /*System.out.println(i);*/
                 }
 				long comparador = System.currentTimeMillis();
                 long comparado = comparador - inicial;
-                if (comparado > 1000){
+                if (comparado > 10){
+					System.out.println("inicial"+ inicial);
+					System.out.println("Comparador"+comparador);
+					System.out.println("comparado"+ comparado);
+
+					comparado = 0;
                 	synchronized (pivote){
                 		try{
 
-							System.out.println(primes);
+							//System.out.println(primes);
 							System.out.println("Ya pasaron 5 segundos.");
+							System.out.println(primes);
+							inicial = System.currentTimeMillis();
 
 							pivote.wait();
 
@@ -59,10 +61,8 @@ public class PrimeFinderThread extends Thread{
 				}
 
             }
-            System.out.println(primes);
+
 	}
-
-
 
 	boolean isPrime(int n) {
 	    boolean ans;

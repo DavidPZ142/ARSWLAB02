@@ -12,19 +12,22 @@ import java.util.Scanner;
  */
 public class Control extends Thread {
 
-    private final static int NTHREADS = 3;
+    private final static int NTHREADS = 1;
     private final static int MAXVALUE = 30000000;
     private final static int TMILISECONDS = 5000;
+
 
 
     private final int NDATA = MAXVALUE / NTHREADS;
     private PrimeFinderThread pft[];
     public Object pivote;
-    Scanner entrada = new Scanner(System.in);
+
+
     private Control() {
         super();
         this.pft = new  PrimeFinderThread[NTHREADS];
         this.pivote = new Object();
+        Scanner entrada=new Scanner(System.in);
 
         int i;
         for(i = 0;i < NTHREADS - 1; i++) {
@@ -46,13 +49,21 @@ public class Control extends Thread {
             pft[i].start();
 
         }
-
-        /*
-        System.out.println("Presione ENTER");
-        String enter = entrada.nextLine();*/
-
-
     }
+
+
+    public void notificar(){
+
+        synchronized (pivote){
+
+
+            pivote.notifyAll();
+
+
+        }
+    }
+
+
 
 
     
