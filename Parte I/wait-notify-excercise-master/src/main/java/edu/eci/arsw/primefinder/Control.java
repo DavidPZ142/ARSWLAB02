@@ -12,12 +12,9 @@ import java.util.Scanner;
  */
 public class Control extends Thread {
 
-    private final static int NTHREADS = 1;
-    private final static int MAXVALUE = 30000000;
+    private final static int NTHREADS = 3;
+    private final static int MAXVALUE = 300000000;
     private final static int TMILISECONDS = 5000;
-
-
-
     private final int NDATA = MAXVALUE / NTHREADS;
     private PrimeFinderThread pft[];
     public Object pivote;
@@ -43,23 +40,15 @@ public class Control extends Thread {
 
     @Override
     public void run() {
-
         for(int i = 0;i < NTHREADS;i++ ) {
-
             pft[i].start();
-
         }
     }
 
 
     public void notificar(){
-
         synchronized (pivote){
-
-
             pivote.notifyAll();
-
-
         }
     }
 

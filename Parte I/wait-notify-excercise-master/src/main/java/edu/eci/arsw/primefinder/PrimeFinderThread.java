@@ -11,6 +11,7 @@ public class PrimeFinderThread extends Thread{
     boolean booleano;
 	private List<Integer> primes;
 	private Object pivote;
+	int need;
 
 
 	public PrimeFinderThread(int a, int b, Object pivote) {
@@ -27,30 +28,27 @@ public class PrimeFinderThread extends Thread{
 	public void run(){
 			long inicial = System.currentTimeMillis();
             for (int i= a;i < b;i++){
-
-
+				if (i == need){
+					inicial = System.currentTimeMillis();
+					System.out.println("Actualizo el tiempo");
+				}
                 if (isPrime(i)){
                     primes.add(i);
                 }
 				long comparador = System.currentTimeMillis();
                 long comparado = comparador - inicial;
-                if (comparado > 10){
-					System.out.println("inicial"+ inicial);
-					System.out.println("Comparador"+comparador);
-					System.out.println("comparado"+ comparado);
+                if (comparado > 5000){
 
-					comparado = 0;
                 	synchronized (pivote){
                 		try{
 
 							//System.out.println(primes);
-							System.out.println("Ya pasaron 5 segundos.");
 							System.out.println(primes);
-							inicial = System.currentTimeMillis();
-
+							System.out.println("Ya pasaron 5 segundos.");
+							System.out.println(comparado);
+							//System.out.println(i);
+							need = i+1;
 							pivote.wait();
-
-
 
 						}
                 		catch(InterruptedException e){
