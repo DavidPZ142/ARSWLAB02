@@ -26,12 +26,22 @@ public class Snake extends Observable implements Runnable {
     private boolean isSelected = false;
     private int growing = 0;
     public boolean goal = false;
+    public boolean pausado = false;
+    public Object pivote;
 
     public Snake(int idt, Cell head, int direction) {
         this.idt = idt;
         this.direction = direction;
         generateSnake(head);
 
+    }
+    public void pausar(){
+
+        this.pausado = true;
+    }
+
+    public void retornar(){
+        this.pausado = false;
     }
 
     public boolean isSnakeEnd() {
@@ -48,14 +58,22 @@ public class Snake extends Observable implements Runnable {
     @Override
     public void run() {
         while (!snakeEnd) {
-            
+
             snakeCalc();
 
             //NOTIFY CHANGES TO GUI
             setChanged();
             notifyObservers();
-
             try {
+                synchronized (pivote) {
+                    try {
+                        if (this.pausado == true) {
+                            pivote.wait();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 if (hasTurbo == true) {
                     Thread.sleep(500 / 3);
                 } else {
@@ -64,12 +82,8 @@ public class Snake extends Observable implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
-        
         fixDirection(head);
-        
-        
     }
 
     private void snakeCalc() {

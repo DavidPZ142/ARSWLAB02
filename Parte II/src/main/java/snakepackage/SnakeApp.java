@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 public class SnakeApp {
 
     private static SnakeApp app;
-    public static final int MAX_THREADS = 8;
+    public static final int MAX_THREADS = 1;
     Snake[] snakes = new Snake[MAX_THREADS];
     private static final Cell[] spawn = {
         new Cell(1, (GridSize.GRID_HEIGHT / 2) / 2),
