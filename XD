@@ -2,3 +2,13 @@ while true en control
 System.in
 wait y notify mismo objeto objeto pivote
 meterlo en un sincronized
+
+
+posibles condiciones de carrera: el juego puede quedar en bucle
+
+Uso inadecuado de colecciones, considerando su manejo concurrente (para esto, aumente la velocidad del juego y ejecútelo varias veces hasta que se genere un error).
+se cambia  el int por un atomic integer 
+
+Uso innecesario de esperas activas.
+
+mirar bn
