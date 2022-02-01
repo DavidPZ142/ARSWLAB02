@@ -8,6 +8,9 @@ import javax.swing.JFrame;
 import enums.GridSize;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -20,7 +23,7 @@ import javax.swing.JPanel;
 public class SnakeApp {
 
     private static SnakeApp app;
-    public static final int MAX_THREADS = 1;
+    public static final int MAX_THREADS = 8;
     Snake[] snakes = new Snake[MAX_THREADS];
     private static final Cell[] spawn = {
         new Cell(1, (GridSize.GRID_HEIGHT / 2) / 2),
@@ -36,6 +39,13 @@ public class SnakeApp {
     private JFrame frame;
     private static Board board;
     int nr_selected = 0;
+
+    public Object pivote = new Object();
+   private boolean corriendo = false;
+   private Snake winner= null;
+   private Snake noob = null;
+
+
     Thread[] thread = new Thread[MAX_THREADS];
 
     public SnakeApp() {
@@ -49,13 +59,40 @@ public class SnakeApp {
         frame.setLocation(dimension.width / 2 - frame.getWidth() / 2,
                 dimension.height / 2 - frame.getHeight() / 2);
         board = new Board();
-        
-        
-        frame.add(board,BorderLayout.CENTER);
-        
-        JPanel actionsBPabel=new JPanel();
+
+
+        frame.add(board, BorderLayout.CENTER);
+
+        JPanel actionsBPabel = new JPanel();
         actionsBPabel.setLayout(new FlowLayout());
         actionsBPabel.add(new JButton("Action "));
+
+
+        JButton startButton = new JButton("Start");
+        startButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                startGame();
+            }
+        });
+        actionsBPabel.add(startButton);
+
+        JButton stopButton = new JButton("Pause");
+        stopButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                pauseGame();
+            }
+        });
+
+        JButton resumeButton = new JButton("Resume");
+        resumeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                resumeGame();
+            }
+        });
+
+        actionsBPabel.add(stopButton);
+        actionsBPabel.add(startButton);
+        actionsBPabel.add(resumeButton);
         frame.add(actionsBPabel,BorderLayout.SOUTH);
 
     }
@@ -71,23 +108,32 @@ public class SnakeApp {
         
         for (int i = 0; i != MAX_THREADS; i++) {
             
-            snakes[i] = new Snake(i + 1, spawn[i], i + 1);
+            snakes[i] = new Snake(i + 1, spawn[i], i + 1, pivote);
             snakes[i].addObserver(board);
             thread[i] = new Thread(snakes[i]);
-            thread[i].start();
+            //thread[i].start();
         }
 
         frame.setVisible(true);
+        boolean hayNoob = false;
 
-            
         while (true) {
-            int x = 0;
+            //Se cambia el int para evitar el x++ que puede generar errores al uso de hilos
+            //int x = 0;
+            AtomicInteger x = new AtomicInteger(0);
             for (int i = 0; i != MAX_THREADS; i++) {
                 if (snakes[i].isSnakeEnd() == true) {
-                    x++;
+                    //x++;
+                    x.getAndIncrement();
+
+                    if(!hayNoob){
+                        this.noob = snakes[i];
+                        System.out.println("El primer muerto :" +this.noob.getIdt());
+                        hayNoob = true;
+                    }
                 }
             }
-            if (x == MAX_THREADS) {
+            if (x.get() == MAX_THREADS) {
                 break;
             }
         }
@@ -105,4 +151,58 @@ public class SnakeApp {
         return app;
     }
 
+    private void startGame() {
+        if (!corriendo) {
+            for (int i = 0; i != MAX_THREADS; i++) {
+                thread[i].start();
+            }
+
+            this.corriendo = true;
+        }
+    }
+
+    private void pauseGame() {
+        for (int i = 0; i != MAX_THREADS; i++) {
+            snakes[i].pausar();
+        }
+        calcTheWinner();
+
+        System.out.println("El ganador por ahora: "+ this.winner.getBody().size());
+    }
+
+    private void resumeGame(){
+        for (int i = 0; i != MAX_THREADS; i++) {
+            snakes[i].retornar();
+        }
+        synchronized (pivote) {
+            pivote.notifyAll();
+        }
+    }
+
+    private void calcTheWinner(){
+        Snake winnerr = null;
+        int a = -1;
+        for (int i = 0; i != MAX_THREADS; i++) {
+            if (snakes[i] != null && (snakes[i].getBody().size() > a)) {
+                a = snakes[i].getBody().size();
+                winnerr = snakes[i];
+            }
+        }
+        this.setWinner(winnerr);
+    }
+
+    public Snake getWinner(){
+        if (this.winner != null){
+            return winner;
+        }
+        else{
+            return null;
+        }
+    }
+
+    public void setWinner(Snake winner) {
+        this.winner = winner;
+    }
 }
+
+

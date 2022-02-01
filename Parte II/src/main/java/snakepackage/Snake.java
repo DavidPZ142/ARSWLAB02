@@ -29,10 +29,11 @@ public class Snake extends Observable implements Runnable {
     public boolean pausado = false;
     public Object pivote;
 
-    public Snake(int idt, Cell head, int direction) {
+    public Snake(int idt, Cell head, int direction, Object pivote) {
         this.idt = idt;
         this.direction = direction;
         generateSnake(head);
+        this.pivote = pivote;
 
     }
     public void pausar(){
