@@ -32,8 +32,8 @@ public class PrimeFinderThread extends Thread{
                 }
 				long comparador = System.currentTimeMillis();
                 long comparado = comparador - inicial;
-                if (comparado > 5000){
 
+                if (comparado > 5000){
                 	synchronized (pivote){
                 		try{
 							//System.out.println(primes);
