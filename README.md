@@ -36,6 +36,16 @@ Tenga en cuenta:
 
 -   La instrucción notifyAll(), despierta todos los hilos que estan
     esperando por el objeto (hicieron wait()sobre el objeto).
+    
+    
+    
+Iniciamos con la creación de los hilos y configuramos que estos cambien a un estado wait() mediante el objeto lock asignado a cada hilo en este caso "pivote", para que suceda en un valor cercano a los 5000 milisegundos.
+
+![](img/wait.png)
+    
+Una vez completados los 5 segundos el hilo entrará en un estado wait() por lo tanto la forma de reanudarlo será oprimiendo la tecla ENTER, la cual se programó usando la clase scanner para que cada que por input reciba un cambio de linea con la tecla enter realize la ejecución del metodo notificar() el cual a traves del objeto lock "pivote" realize un notifyAll() y se reanude el trabajo del o de los hilos.
+
+![](img/notifyall.png)
 
 
 ### Parte II
