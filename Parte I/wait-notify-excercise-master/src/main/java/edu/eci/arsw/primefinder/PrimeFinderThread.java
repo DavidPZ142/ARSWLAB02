@@ -3,9 +3,7 @@ package edu.eci.arsw.primefinder;
 import java.util.LinkedList;
 import java.util.List;
 
-
 public class PrimeFinderThread extends Thread{
-
 
 	int a,b;
     boolean booleano;
@@ -13,15 +11,12 @@ public class PrimeFinderThread extends Thread{
 	private Object pivote;
 	int need;
 
-
 	public PrimeFinderThread(int a, int b, Object pivote) {
 		super();
 		this.primes = new LinkedList<>();
 		this.a = a;
 		this.b = b;
 		this.pivote = pivote;
-
-
 	}
 
         @Override
@@ -41,7 +36,6 @@ public class PrimeFinderThread extends Thread{
 
                 	synchronized (pivote){
                 		try{
-
 							//System.out.println(primes);
 							System.out.println(primes);
 							System.out.println("Ya pasaron 5 segundos.");
@@ -55,11 +49,8 @@ public class PrimeFinderThread extends Thread{
                 			e.printStackTrace();
 						}
 					}
-
 				}
-
             }
-
 	}
 
 	boolean isPrime(int n) {
@@ -75,22 +66,16 @@ public class PrimeFinderThread extends Thread{
 	    return ans;
 	}
 
-
-
 	public List<Integer> getPrimes() {
 		return primes;
 	}
 
 	public void detenerHilo(){
 	    booleano = true;
-
-
     }
 
     public void reanudarHilo(){
 	    booleano = false;
 	    notify();
-
     }
-	
 }

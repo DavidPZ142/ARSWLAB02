@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Control extends Thread {
 
     private final static int NTHREADS = 3;
-    private final static int MAXVALUE = 300000000;
+    private final static int MAXVALUE = 3000;
     private final static int TMILISECONDS = 5000;
     private final int NDATA = MAXVALUE / NTHREADS;
     private PrimeFinderThread pft[];
